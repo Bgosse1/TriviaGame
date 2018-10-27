@@ -111,12 +111,10 @@ $(document).ready(function () {
             doneBtn.text("Done");
             doneBtn.attr("id", "Done");
             doneBtnDiv.append(doneBtn);
-            console.log($("#Done"));
-            $(doneBtn).on('click', function() {
-                console.log("here");
+            $(doneBtn).on('click', function () {
                 triviaGame.checkUserAnswer();
-              });
-            
+            });
+
             $("#questions").append(doneBtnDiv);
 
         },
@@ -215,10 +213,9 @@ $(document).ready(function () {
             resetBtn.attr("id", "reset");
             resetBtnDiv.append(resetBtn);
             $("#display").append(resetBtnDiv);
-            $(resetBtn).on('click', function() {
+            $(resetBtn).on('click', function () {
                 location.reload();
-              });
-            
+            });
         }
     };
     $("#start").on('click', triviaGame.init);

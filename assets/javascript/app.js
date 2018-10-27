@@ -1,39 +1,20 @@
 $(document).ready(function () {
     var timer = {
-        startNumber: 120,
+        startNumber: 20,
         intervalId: '',
         run: function () {
             clearInterval(this.intervalId);
             this.intervalId = setInterval(this.decrement, 1000);
-
         },
         decrement: function () {
-
-            //  Decrease number by one.
             timer.startNumber--;
-
-
             $("#timerNum").html("<span>" + timer.startNumber + "</span>");
-
-            //  Show the number in the #show-number tag.
-            //$("#timer").html("<h2>" + timer.startNumber + "</h2>");
-
-
-            //  Once number hits zero...
             if (timer.startNumber === 0) {
-
-                //   //  ...run the stop function.
                 this.stop();
-
-                //  Alert the user that time is up.
-                alert("Time Up!");
+                triviaGame.checkUserAnswer();
             }
         },
         stop: function () {
-
-            //  Clears our intervalId
-            //  We just pass the name of the interval
-            //  to the clearInterval function.
             clearInterval(this.intervalId);
         }
     };
@@ -80,28 +61,7 @@ $(document).ready(function () {
         }
     };
     var triviaGame = {
-        get correctAnswers() {
-            return this._correctAnswers;
-        },
-        set correctAnswers(correctAnswers) {
-            this._correctAnswers = correctAnswers;
-        },
-        get incorrectAnswers() {
-            return this._incorrectAnswers;
-        },
-        set correctAnswers(incorrectAnswers) {
-            this._incorrectAnswers = incorrectAnswers;
-        },
-        get unanswered() {
-            return this._unanswered;
-        },
-        set correctAnswers(unanswered) {
-            this._unanswered = unanswered;
-        },
         init: function () {
-            this.correctAnswers = 0;
-            this.incorrectAnswers = 0;
-            this.unanswered = 0;
             $("#start").hide();
             triviaGame.loadGame();
             timer.run();
@@ -113,21 +73,18 @@ $(document).ready(function () {
             $("#questions").append(timerText);
             var timerNum = $("<span>");
             timerNum.attr("id", "timerNum");
-            //timerNum.text(timer.startNumber);
             $("#timer").append(timerNum);
             $("#timerNum").html("<span>" + timer.startNumber + "</span>");
-
+            var i = 0;
             $.each(questions, function () {
+                i++;
                 var displayQuestions = $("<p>");
                 var btnGroup = $('<div>');
                 btnGroup.attr("class", "btn-group btn-group-toggle mb-5");
                 btnGroup.attr("data-toggle", "buttons");
-
                 $.each(this, function (name, value) {
-                    //console.log(name + '=' + value);
                     if (name == "question") {
                         displayQuestions.text(value);
-
                         $("#questions").append(displayQuestions);
                         $("#questions").append(btnGroup);
                     }
@@ -137,47 +94,133 @@ $(document).ready(function () {
                             label.attr("class", "btn btn-light");
                             var radio = $('<input>');
                             radio.attr("type", "radio");
-                            radio.attr("name", "options");
+                            radio.attr("name", "answer" + i);
                             radio.attr("id", this);
+                            radio.attr("value", this);
                             radio.attr("autocomplete", "off");
                             label.text(this)
                             label.append(radio);
                             btnGroup.append(label);
                         });
-
                     }
                 });
             });
+            var doneBtnDiv = $("<div>");
+            var doneBtn = $("<button>");
+            doneBtn.attr("class", "btn btn btn-outline-primary btn-lg");
+            doneBtn.text("Done");
+            doneBtn.attr("id", "Done");
+            doneBtnDiv.append(doneBtn);
+            console.log($("#Done"));
+            $(doneBtn).on('click', function() {
+                console.log("here");
+                triviaGame.checkUserAnswer();
+              });
+            
+            $("#questions").append(doneBtnDiv);
+
         },
+        checkUserAnswer: function () {
+            const totalQuestions = 8
+            var answeredCorrectly = 0;
+            var answeredIncorrectly = 0;
+            $.each($("input[name='answer1']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_one.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer2']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_two.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer3']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_three.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer4']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_four.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer5']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_five.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer6']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_six.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer7']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_seven.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $.each($("input[name='answer8']:checked"), function () {
+                var selectedAnswer = $(this).val();
+                if (selectedAnswer === questions.question_eight.answer) {
+                    answeredCorrectly++;
+                }
+                else {
+                    answeredIncorrectly++;
+                }
+            });
+            $("#questions").hide();
+            var unanswered = totalQuestions - (answeredCorrectly + answeredIncorrectly);
+            var resultsCorrect = $("<div>");
+            var resultsIncorrect = $("<div>");
+            var resultsUnanswered = $("<div>");
+            resultsCorrect.html("<h2>Correct Answers: " + answeredCorrectly + "</h2>");
+            resultsIncorrect.html("<h2>Incorrect Answers: " + answeredIncorrectly + "</h2>");
+            resultsUnanswered.html("<h2>Unanswered: " + unanswered + "</h2>");
+            $("#display").append(resultsCorrect);
+            $("#display").append(resultsIncorrect);
+            $("#display").append(resultsUnanswered);
+            var resetBtnDiv = $("<div>");
+            var resetBtn = $("<button>");
+            resetBtn.attr("class", "btn btn btn-outline-primary btn-lg");
+            resetBtn.attr("type", "button");
+            resetBtn.text("Restart");
+            resetBtn.attr("id", "reset");
+            resetBtnDiv.append(resetBtn);
+            $("#display").append(resetBtnDiv);
+            $(resetBtn).on('click', function() {
+                location.reload();
+              });
+            
+        }
     };
     $("#start").on('click', triviaGame.init);
-    //console.log(timer.startNumber);
-
-
 });
 
-
-
-// startGame: function(){
-//     // restarting game results
-
-//     clearInterval(trivia.timerId);
-
-//     // show game section
-//     $('#game').show();
-
-//     //  empty last results
-//     $('#results').html('');
-
-//     // show timer
-//     $('#timer').text(trivia.timer);
-
-//     // remove start button
-//     $('#start').hide();
-
-//     $('#remaining-time').show();
-
-//     // ask first question
-//     trivia.nextQuestion();
-
-// },

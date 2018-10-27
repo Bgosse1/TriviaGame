@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var timer = {
-        startNumber: 20,
+        startNumber: 120,
         intervalId: '',
         run: function () {
             clearInterval(this.intervalId);
